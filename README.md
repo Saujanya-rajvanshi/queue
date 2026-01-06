@@ -177,7 +177,9 @@ public:
 Uses modular arithmetic:
 - rear = (rear + 1) % size
 - front = (front + 1) % size
-  
+
+* Circular Queue Using Array (Fixed Capacity)
+* Circular Queue (Linked List Implementation)
 
 ---
 
@@ -273,6 +275,151 @@ int main() {
     return 0;
 }
 ```
+
+---
+
+---
+
+### 🔗 Circular Queue (Linked List Implementation)
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+class CircularQueue {
+    Node* front;
+    Node* rear;
+    int count;
+
+public:
+    CircularQueue() {
+        front = rear = nullptr;
+        count = 0;
+    }
+
+    bool isEmpty() {
+        return front == nullptr;
+    }
+
+    void enqueue(int x) {
+        Node* temp = new Node(x);
+        if (isEmpty()) {
+            front = rear = temp;
+            rear->next = front;  // circular link
+        } else {
+            rear->next = temp;
+            rear = temp;
+            rear->next = front;  // maintain circularity
+        }
+        count++;
+        cout << "Inserted: " << x << endl;
+    }
+
+    int dequeue() {
+        if (isEmpty()) {
+            cout << "Queue Underflow\n";
+            return -1;
+        }
+        int val;
+        if (front == rear) { // only one element
+            val = front->data;
+            delete front;
+            front = rear = nullptr;
+        } else {
+            Node* temp = front;
+            val = temp->data;
+            front = front->next;
+            rear->next = front;  // maintain circularity
+            delete temp;
+        }
+        count--;
+        cout << "Removed: " << val << endl;
+        return val;
+    }
+
+    int peek() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        return front->data;
+    }
+
+    int size() {
+        return count;
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return;
+        }
+        cout << "Queue elements: ";
+        Node* temp = front;
+        do {
+            cout << temp->data << " ";
+            temp = temp->next;
+        } while (temp != front);
+        cout << endl;
+    }
+};
+
+int main() {
+    CircularQueue q;
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+    q.display();
+    q.dequeue();
+    q.display();
+    q.enqueue(40);
+    q.enqueue(50);
+    q.display();
+    cout << "Front element: " << q.peek() << endl;
+    cout << "Queue size: " << q.size() << endl;
+    return 0;
+}
+```
+
+---
+
+---
+
+### 🔁 Double Ended Queue (Deque)
+
+- **Definition**:  
+  A linear data structure that allows **insertion and deletion from both ends** — front and rear.
+
+- **Key Features**:  
+  - Generalized form of queue  
+  - Can behave like both **stack** and **queue**  
+  - Useful for problems needing flexible end operations  
+  - Typically implemented using **doubly linked list** or **circular array**
+
+---
+
+### 🧭 Deque as Stack vs Queue
+
+| Mode         | Behavior                          |
+|--------------|-----------------------------------|
+| As Stack     | Insert/Delete from **one end**    |
+| As Queue     | Insert at rear, delete from front |
+
+---
+
+### 🧨 Types of Deques
+
+| Type                   | Insertion Allowed At | Deletion Allowed At | Use Case |
+|------------------------|----------------------|----------------------|----------|
+| **Input-Restricted**   | One end only         | Both ends            | Controlled input |
+| **Output-Restricted**  | Both ends            | One end only         | Controlled output |
 
 ---
 

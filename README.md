@@ -3,6 +3,7 @@
 ## INDEX 
 - [basic](#basic)
 - [queue representaion](#queue-representation)
+- [circular queue](#circular-queue)
 
 ## basic 
 ---
@@ -165,4 +166,113 @@ public:
 
 ---
 
-Would you like a test driver to demonstrate both implementations in action?
+## circular queue
+
+- ✅ Efficient memory use (reuses freed space)  
+- 🚫 Prevents false overflow in linear queues  
+- ⚡ Faster (no shifting needed)  
+- 🔄 Ideal for continuous buffering (e.g., scheduling, streaming)  
+- 📐 Simple index management with modular arithmetic  
+- Simpler Index Management
+Uses modular arithmetic:
+- rear = (rear + 1) % size
+- front = (front + 1) % size
+  
+
+---
+
+### 🔄 Circular Queue Using Array (Fixed Capacity)
+
+```cpp
+#include <iostream>
+#define SIZE 5
+using namespace std;
+
+class CircularQueue {
+    int arr[SIZE];
+    int front, rear, count;
+
+public:
+    CircularQueue() {
+        front = 0;
+        rear = -1;
+        count = 0;
+    }
+
+    bool isEmpty() {
+        return count == 0;
+    }
+
+    bool isFull() {
+        return count == SIZE;
+    }
+
+    void enqueue(int x) {
+        if (isFull()) {
+            cout << "Queue Overflow\n";
+            return;
+        }
+        rear = (rear + 1) % SIZE;
+        arr[rear] = x;
+        count++;
+        cout << "Inserted: " << x << endl;
+    }
+
+    int dequeue() {
+        if (isEmpty()) {
+            cout << "Queue Underflow\n";
+            return -1;
+        }
+        int val = arr[front];
+        front = (front + 1) % SIZE;
+        count--;
+        cout << "Removed: " << val << endl;
+        return val;
+    }
+
+    int peek() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        return arr[front];
+    }
+
+    int size() {
+        return count;
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return;
+        }
+        cout << "Queue elements: ";
+        for (int i = 0; i < count; i++) {
+            cout << arr[(front + i) % SIZE] << " ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    CircularQueue q;
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+    q.enqueue(40);
+    q.enqueue(50); // Should trigger overflow
+    q.display();
+    q.dequeue();
+    q.dequeue();
+    q.enqueue(60);
+    q.enqueue(70); // Should wrap around
+    q.display();
+    cout << "Front element: " << q.peek() << endl;
+    cout << "Queue size: " << q.size() << endl;
+    return 0;
+}
+```
+
+---
+

@@ -4,6 +4,7 @@
 - [basic](#basic)
 - [queue representaion](#queue-representation)
 - [circular queue](#circular-queue)
+- [dequeue](#dequeue)
 
 ## basic 
 ---
@@ -390,6 +391,7 @@ int main() {
 
 ---
 
+###### dequeue
 ---
 
 ### 🔁 Double Ended Queue (Deque)

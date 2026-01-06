@@ -5,6 +5,7 @@
 - [queue representaion](#queue-representation)
 - [circular queue](#circular-queue)
 - [dequeue](#dequeue)
+- [Priority Queue](#Priority-Queue)
 
 ## basic 
 ---
@@ -422,6 +423,268 @@ int main() {
 |------------------------|----------------------|----------------------|----------|
 | **Input-Restricted**   | One end only         | Both ends            | Controlled input |
 | **Output-Restricted**  | Both ends            | One end only         | Controlled output |
+
+---
+---
+
+### 📘 Notes: Circular Array Deque
+
+- **Deque (Double-Ended Queue)**:  
+  A linear data structure allowing **insertion and deletion from both ends** — front and rear.
+
+- **Circular Array Implementation**:  
+  Uses modular arithmetic to wrap around the array when reaching boundaries.
+
+- **Full Condition**:  
+  ```cpp
+  (F == 0 && R == N - 1) || (F == R + 1)
+  ```
+
+- **Empty Condition**:  
+  ```cpp
+  F == -1
+  ```
+
+- **Key Operations**:
+  - `enqueueFront(x)`
+  - `enqueueRear(x)`
+  - `dequeueFront()`
+  - `dequeueRear()`
+  - `getFront()`
+  - `display()`
+
+---
+
+### 💻 Code: Circular Array Deque in C++
+
+```cpp
+#include <iostream>
+#define N 5
+using namespace std;
+
+class CircularDeque {
+    int deque[N];
+    int F, R;
+
+public:
+    CircularDeque() {
+        F = R = -1;
+    }
+
+    bool isFull() {
+        return (F == 0 && R == N - 1) || (F == R + 1);
+    }
+
+    bool isEmpty() {
+        return F == -1;
+    }
+
+    void enqueueFront(int x) {
+        if (isFull()) {
+            cout << "Queue is full\n";
+        } else if (isEmpty()) {
+            F = R = 0;
+        } else if (F == 0) {
+            F = N - 1;
+        } else {
+            F--;
+        }
+        deque[F] = x;
+        cout << "Inserted at front: " << x << endl;
+    }
+
+    void enqueueRear(int x) {
+        if (isFull()) {
+            cout << "Queue is full\n";
+        } else if (isEmpty()) {
+            F = R = 0;
+        } else if (R == N - 1) {
+            R = 0;
+        } else {
+            R++;
+        }
+        deque[R] = x;
+        cout << "Inserted at rear: " << x << endl;
+    }
+
+    void dequeueFront() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+        } else if (F == R) {
+            cout << "Deleted from front: " << deque[F] << endl;
+            F = R = -1;
+        } else if (F == N - 1) {
+            cout << "Deleted from front: " << deque[F] << endl;
+            F = 0;
+        } else {
+            cout << "Deleted from front: " << deque[F] << endl;
+            F++;
+        }
+    }
+
+    void dequeueRear() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+        } else if (F == R) {
+            cout << "Deleted from rear: " << deque[R] << endl;
+            F = R = -1;
+        } else if (R == 0) {
+            cout << "Deleted from rear: " << deque[R] << endl;
+            R = N - 1;
+        } else {
+            cout << "Deleted from rear: " << deque[R] << endl;
+            R--;
+        }
+    }
+
+    void getFront() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+        } else {
+            cout << "Front element: " << deque[F] << endl;
+        }
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return;
+        }
+        cout << "Deque elements: ";
+        int i = F;
+        while (true) {
+            cout << deque[i] << " ";
+            if (i == R) break;
+            i = (i + 1) % N;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    CircularDeque dq;
+    dq.enqueueRear(10);
+    dq.enqueueRear(20);
+    dq.enqueueFront(5);
+    dq.display();
+    dq.dequeueRear();
+    dq.dequeueFront();
+    dq.display();
+    dq.getFront();
+    return 0;
+}
+```
+
+---
+
+---
+
+### 🚀 Applications of Deque
+
+- **Implementing Other Data Structures**  
+  - Acts as **stack** (restrict to one end)  
+  - Acts as **queue** (insert rear, delete front)  
+  - Acts as **priority queue** (insert based on priority at ends)
+
+- **Palindrome Checking**  
+  - Compare characters from both ends efficiently
+
+- **Undo/Redo Functionality**  
+  - Used in editors and browsers  
+  - Undo = pop from rear, Redo = push back
+
+- **Job Scheduling**  
+  - OS task queues (e.g., work stealing in multiprocessors)
+
+- **Cache Management**  
+  - LRU (Least Recently Used) cache:  
+    - Remove from front, insert at rear
+
+- **Real-Time Systems**  
+  - Supports dynamic FIFO/LIFO policies (e.g., embedded systems)
+
+---
+##### Priority Queue
+---
+
+## 🎯 Priority Queue — Key Concepts
+
+- **Definition**:  
+  A special type of queue where each element is assigned a **priority**, and elements are served based on that priority.
+
+- **Serving Rule**:  
+  - Higher priority → served first  
+  - Equal priority → served in **arrival order** (FIFO)
+
+- **Priority Assignment**:  
+  - Can be based on **element value**  
+  - Either **highest value = highest priority** or **lowest value = highest priority**
+
+---
+
+### ⚙️ Characteristics
+
+- Every element has a **comparable priority**
+- Items are **inserted based on priority**
+- **Dequeue** always removes the **highest priority** item
+- Supports **FCFS** for equal priorities
+- Used in key algorithms:
+  - **Dijkstra’s shortest path**
+  - **Prim’s MST**
+  - **Huffman coding**
+
+---
+
+### 📊 Example (Linked List Representation)
+
+| INFO | PNR (Priority) | LINK |
+|------|----------------|------|
+| 232  | 2              | 6    |
+| 243  | 1              | 2    |
+| 593  | 4              | 0    |
+| 111  | 2              | 5    |
+| 650  | 6              | 0    |
+| 780  | 5              | 0    |
+| 333  | 4              | 0    |
+
+- **Lowest PNR = Highest Priority**
+- Traversal follows LINK pointers from START
+
+---
+
+---
+
+### 🧮 Types of Priority Queue
+
+| Type                          | Priority Rule                             | Example Queue         | Highest Priority |
+|-------------------------------|--------------------------------------------|------------------------|------------------|
+| **Ascending Order**           | Lower value = higher priority              | [22, 63, 76, 100]      | 22               |
+| **Descending Order**          | Higher value = higher priority             | [111, 100, 76, 63, 22] | 111              |
+
+- Elements are dequeued based on priority value  
+- If priorities are equal → served in arrival order (FIFO)
+
+---
+
+### 🚀 Applications of Priority Queue
+
+- **Hospital Emergency Room**  
+  Treats patients based on urgency level
+
+- **Task Scheduling**  
+  Prioritizes system-critical tasks (e.g., I/O, interrupts)
+
+- **Process Management**  
+  CPU scheduling based on process priority
+
+- **Dijkstra’s Algorithm**  
+  Selects next node with smallest tentative distance
+
+- **Prim’s Algorithm**  
+  Picks edge with minimum weight for MST
+
+- **Heap Sort**  
+  Uses binary heap to sort elements efficiently
 
 ---
 
